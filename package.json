@@ -1,23 +1,51 @@
 {
   "name": "mpc-lib",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Solana MPC Signing Library with WASM backend support",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "pkg"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "typecheck": "tsc --noEmit"
   },
-  "keywords": [],
+  "keywords": [
+    "solana",
+    "mpc",
+    "cryptography",
+    "ed25519",
+    "wasm",
+    "signing"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@solana/web3.js": "^1.98.2",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
+    "@types/node": "^20.19.1",
     "jest": "^30.0.0",
+    "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
+  },
+
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
   }
 }
