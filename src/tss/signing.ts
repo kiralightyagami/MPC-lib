@@ -1,4 +1,4 @@
-import { Connection, PublicKey, Transaction, SystemProgram } from '@solana/web3.js';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { createMPCSigner } from '../mpc/ed25519';
 import { 
   TSSTransactionDetails, 
@@ -176,7 +176,15 @@ export class TSSSigningService {
    * Derive public key from secret key
    */
   private derivePublicKey(secretKey: Uint8Array): PublicKey {
-    const keypair = nacl.sign.keyPair.fromSecretKey(secretKey);
+    // Ensure we have a valid 64-byte secret key for nacl
+    let fullSecretKey = secretKey;
+    if (secretKey.length === 32) {
+      // Generate a full 64-byte key by creating a keypair from the 32-byte seed
+      const keypair = nacl.sign.keyPair.fromSeed(secretKey);
+      fullSecretKey = keypair.secretKey;
+    }
+    
+    const keypair = nacl.sign.keyPair.fromSecretKey(fullSecretKey);
     return new PublicKey(keypair.publicKey);
   }
 
@@ -206,13 +214,18 @@ export class TSSSigningService {
     // Simplified partial signature creation
     // In production, this would use proper TSS signature schemes like FROST or similar
     
-    // Combine secret key with nonce
-    const combinedSecret = new Uint8Array(64);
-    combinedSecret.set(secretKey);
-    combinedSecret.set(secretNonce, 32);
+    // Ensure we have a valid 32-byte seed for key generation
+    let seedKey = secretKey;
+    if (secretKey.length === 64) {
+      seedKey = secretKey.slice(0, 32);
+    } else if (secretKey.length !== 32) {
+      // Pad or truncate to 32 bytes
+      seedKey = new Uint8Array(32);
+      seedKey.set(secretKey.slice(0, Math.min(32, secretKey.length)));
+    }
 
-    // Create signature using tweetnacl
-    const keypair = nacl.sign.keyPair.fromSecretKey(combinedSecret.slice(0, 32));
+    // Create signature using tweetnacl with proper seed
+    const keypair = nacl.sign.keyPair.fromSeed(seedKey);
     const signature = nacl.sign.detached(message, keypair.secretKey);
 
     return signature;

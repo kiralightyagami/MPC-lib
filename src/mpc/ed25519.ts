@@ -1,4 +1,4 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import { MPCSigner } from './Signer';
 import * as nacl from 'tweetnacl';
 
@@ -9,6 +9,7 @@ import * as nacl from 'tweetnacl';
 export async function createMPCSigner(): Promise<MPCSigner> {
   try {
     // Try to import WASM module if available
+    // @ts-ignore - WASM module may not exist, fallback to tweetnacl
     const wasmModule = await import('../../pkg/ed25519_tss_wasm');
     await wasmModule.default();
     
@@ -48,6 +49,7 @@ export async function createMPCSigner(): Promise<MPCSigner> {
  */
 export async function createMPCSignerFromSecretKey(secretKeyBytes: Uint8Array): Promise<MPCSigner> {
   try {
+    // @ts-ignore - WASM module may not exist, fallback to tweetnacl
     const wasmModule = await import('../../pkg/ed25519_tss_wasm');
     await wasmModule.default();
     

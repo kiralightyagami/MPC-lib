@@ -1,51 +1,73 @@
 {
-  "name": "mpc-lib",
+  "name": "@mpc-ed25519-solana",
   "version": "1.0.0",
-  "description": "Solana MPC Signing Library with WASM backend support",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "description": "A comprehensive TypeScript library for Solana Multi-Party Computation (MPC) and Threshold Signature Schemes (TSS) - Compatible with ZenGo-X/solana-tss",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "files": [
     "dist",
-    "pkg"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "test": "jest",
     "test:watch": "jest --watch",
-    "typecheck": "tsc --noEmit"
+    "test:usage": "node examples/simple-test.cjs",
+    "typecheck": "tsc --noEmit",
+    "example": "npx tsx examples/tss-example.ts",
+    "prepublishOnly": "npm run build && npm test",
+    "clean": "rm -rf dist"
   },
   "keywords": [
     "solana",
     "mpc",
+    "tss",
+    "threshold-signatures",
+    "multi-party-computation",
+    "blockchain",
     "cryptography",
     "ed25519",
     "wasm",
-    "signing"
+    "typescript"
   ],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
+  "author": "kiralightyagami",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiralightyagami/solana-mpc-tss.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kiralightyagami/solana-mpc-tss/issues"
+  },
+  "homepage": "https://github.com/kiralightyagami/solana-mpc-tss#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
-    "@solana/web3.js": "^1.98.2",
+    "@solana/web3.js": "^1.95.4",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/node": "^20.19.1",
-    "jest": "^30.0.0",
-    "ts-jest": "^29.4.0",
-    "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.2",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   },
-
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "splitting": false,
-    "sourcemap": true,
-    "clean": true
+  "peerDependencies": {
+    "@solana/web3.js": "^1.95.0"
   }
 }

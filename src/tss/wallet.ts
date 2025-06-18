@@ -51,7 +51,7 @@ export class TSSWallet {
    * Equivalent to: solana-tss airdrop <address> <amount>
    */
   async requestAirdrop(publicKey: PublicKey, amount: number): Promise<string> {
-    if (this.network === 'mainnet') {
+    if (this.network === 'mainnet-beta') {
       throw new Error('Airdrop not available on mainnet');
     }
 

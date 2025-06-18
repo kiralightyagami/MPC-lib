@@ -3,6 +3,23 @@ import { createMPCSigner } from '../src/mpc/ed25519';
 import { MPCKeypair } from '../src/mpc/MPCKeypair';
 import { createTransferTx } from '../src/solana/tx';
 
+// Mock Solana connection methods
+jest.mock('@solana/web3.js', () => {
+  const originalModule = jest.requireActual('@solana/web3.js');
+  return {
+    ...originalModule,
+    Connection: jest.fn().mockImplementation(() => ({
+      getLatestBlockhash: jest.fn().mockResolvedValue({
+        blockhash: '11111111111111111111111111111111',
+        lastValidBlockHeight: 100000000
+      }),
+      getBalance: jest.fn().mockResolvedValue(1000000000), // 1 SOL
+      sendTransaction: jest.fn().mockResolvedValue('1111111111111111111111111111111111111111111111111111111111111111'),
+      confirmTransaction: jest.fn().mockResolvedValue({ value: { err: null } }),
+    })),
+  };
+});
+
 describe('MPC Signing Library', () => {
   let connection: Connection;
 
@@ -28,6 +45,17 @@ describe('MPC Signing Library', () => {
       expect(signature).toBeInstanceOf(Uint8Array);
       expect(signature.length).toBeGreaterThan(0);
     });
+
+    it('should handle WASM fallback to tweetnacl', async () => {
+      // This tests the fallback mechanism when WASM is not available
+      const signer = await createMPCSigner();
+      const message = new Uint8Array([1, 2, 3, 4, 5]);
+      
+      const signature = await signer.sign(message);
+      
+      expect(signature).toBeDefined();
+      expect(signature.length).toBe(64); // ed25519 signature length
+    });
   });
 
   describe('MPCKeypair', () => {
@@ -36,6 +64,19 @@ describe('MPC Signing Library', () => {
       const keypair = new MPCKeypair(signer);
       
       expect(keypair.publicKey).toEqual(signer.publicKey);
+      expect(keypair.secretKey).toBeInstanceOf(Uint8Array);
+      expect(keypair.secretKey.length).toBe(32);
+    });
+
+    it('should sign a message', async () => {
+      const signer = await createMPCSigner();
+      const keypair = new MPCKeypair(signer);
+      const message = new Uint8Array([1, 2, 3]);
+      
+      const signature = await keypair.sign(message);
+      
+      expect(signature).toBeInstanceOf(Uint8Array);
+      expect(signature.length).toBeGreaterThan(0);
     });
 
     it('should sign a transaction', async () => {
@@ -91,6 +132,7 @@ describe('MPC Signing Library', () => {
       expect(tx).toBeDefined();
       expect(tx.instructions).toHaveLength(1);
       expect(tx.feePayer).toEqual(fromPubkey);
+      expect(tx.recentBlockhash).toBe('11111111111111111111111111111111');
     });
   });
 }); 

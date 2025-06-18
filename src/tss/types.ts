@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js';
 /**
  * Network configuration for Solana TSS operations
  */
-export type SolanaNetwork = 'mainnet' | 'devnet' | 'testnet';
+export type SolanaNetwork = 'mainnet-beta' | 'devnet' | 'testnet';
 
 /**
  * TSS Keypair structure
