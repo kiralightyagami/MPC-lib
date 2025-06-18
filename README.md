@@ -1,6 +1,6 @@
 # 🔐 Solana MPC/TSS Library
 
-[![npm version](https://badge.fury.io/js/@mpc-ed25519-solana.svg)](https://badge.fury.io/js/@mpc-ed25519-solana)
+[![npm version](https://badge.fury.io/js/solana-mpc-tss-lib.svg)](https://badge.fury.io/js/solana-mpc-tss-lib)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![Tests](https://img.shields.io/badge/Tests-30%2F30%20✓-green.svg)](#testing)
@@ -26,15 +26,15 @@ A comprehensive TypeScript library for Solana Multi-Party Computation (MPC) and 
 ### Installation
 
 ```bash
-npm install @mpc-ed25519-solana
+npm install solana-mpc-tss-lib
 # or
-yarn add @mpc-ed25519-solana
+yarn add solana-mpc-tss-lib
 ```
 
 ### Basic Usage
 
 ```typescript
-import { TSSCli, createMPCSigner, MPCKeypair } from '@mpc-ed25519-solana';
+import { TSSCli, createMPCSigner, MPCKeypair } from 'solana-mpc-tss-lib';
 
 // Quick MPC signing
 const signer = await createMPCSigner();
@@ -49,7 +49,7 @@ console.log('Generated:', keypairInfo.publicKey);
 ### Simple Transaction Example
 
 ```typescript
-import { createMPCSigner, MPCKeypair, createTransferTx } from '@mpc-ed25519-solana';
+import { createMPCSigner, MPCKeypair, createTransferTx } from 'solana-mpc-tss-lib';
 import { Connection, clusterApiUrl, PublicKey } from '@solana/web3.js';
 
 const connection = new Connection(clusterApiUrl('devnet'));
@@ -71,7 +71,7 @@ const signature = await connection.sendTransaction(signedTx, [keypair]);
 ### Multi-Party Threshold Signing
 
 ```typescript
-import { TSSCli } from '@mpc-ed25519-solana';
+import { TSSCli } from 'solana-mpc-tss-lib';
 
 const cli = new TSSCli('devnet');
 

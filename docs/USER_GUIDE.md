@@ -5,15 +5,15 @@
 ### Installation
 
 ```bash
-npm install @mpc-ed25519-solana
+npm install solana-mpc-tss-lib
 # or
-yarn add @mpc-ed25519-solana
+yarn add solana-mpc-tss-lib
 ```
 
 ### Basic Usage
 
 ```typescript
-import { TSSCli, createMPCSigner, MPCKeypair } from '@mpc-ed25519-solana';
+import { TSSCli, createMPCSigner, MPCKeypair } from 'solana-mpc-tss-lib';
 
 // Create a TSS CLI instance
 const cli = new TSSCli('devnet');
@@ -47,7 +47,7 @@ const mpcKeypair = new MPCKeypair(signer);
 Creates an MPC signer with automatic WASM/tweetnacl fallback.
 
 ```typescript
-import { createMPCSigner } from '@mpc-ed25519-solana';
+import { createMPCSigner } from 'solana-mpc-tss-lib';
 
 const signer = await createMPCSigner();
 const message = new Uint8Array([1, 2, 3]);
@@ -58,7 +58,7 @@ const signature = await signer.sign(message);
 Implements Solana's `Signer` interface for transaction signing.
 
 ```typescript
-import { MPCKeypair } from '@mpc-ed25519-solana';
+import { MPCKeypair } from 'solana-mpc-tss-lib';
 
 const signer = await createMPCSigner();
 const keypair = new MPCKeypair(signer);
@@ -76,7 +76,7 @@ const signedTxs = await keypair.signAllTransactions([tx1, tx2]);
 Main interface for TSS operations, compatible with ZenGo-X/solana-tss CLI.
 
 ```typescript
-import { TSSCli } from '@mpc-ed25519-solana';
+import { TSSCli } from 'solana-mpc-tss-lib';
 
 const cli = new TSSCli('devnet'); // or 'testnet', 'mainnet-beta'
 
@@ -97,7 +97,7 @@ cli.switchNetwork('testnet');
 Wallet management and key aggregation.
 
 ```typescript
-import { TSSWallet } from '@mpc-ed25519-solana';
+import { TSSWallet } from 'solana-mpc-tss-lib';
 
 const wallet = new TSSWallet('devnet');
 
@@ -113,7 +113,7 @@ const aggregateWallet = wallet.aggregateKeys(publicKeys, 2); // 2-of-3 threshold
 Multi-party signing protocol implementation.
 
 ```typescript
-import { TSSSigningService } from '@mpc-ed25519-solana';
+import { TSSSigningService } from 'solana-mpc-tss-lib';
 
 const signingService = new TSSSigningService(connection);
 
@@ -144,7 +144,7 @@ const txSignature = await signingService.aggregateSignaturesAndBroadcast(
 ### 1. Simple Transaction Signing
 
 ```typescript
-import { createMPCSigner, MPCKeypair, createTransferTx } from '@mpc-ed25519-solana';
+import { createMPCSigner, MPCKeypair, createTransferTx } from 'solana-mpc-tss-lib';
 import { Connection, clusterApiUrl, PublicKey } from '@solana/web3.js';
 
 const connection = new Connection(clusterApiUrl('devnet'));
@@ -167,7 +167,7 @@ const signature = await connection.sendTransaction(signedTx, [keypair]);
 ### 2. Multi-Party Threshold Signing
 
 ```typescript
-import { TSSCli } from '@mpc-ed25519-solana';
+import { TSSCli } from 'solana-mpc-tss-lib';
 
 const cli = new TSSCli('devnet');
 
@@ -244,7 +244,7 @@ const finalSignature = await cli.aggregateSignaturesAndBroadcast(
 ### 3. Wallet Integration
 
 ```typescript
-import { TSSWallet, TSSCli } from '@mpc-ed25519-solana';
+import { TSSWallet, TSSCli } from 'solana-mpc-tss-lib';
 
 // Create wallet
 const wallet = new TSSWallet('devnet');

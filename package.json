@@ -1,5 +1,5 @@
 {
-  "name": "@mpc-ed25519-solana",
+  "name": "solana-mpc-tss-lib",
   "version": "1.0.0",
   "description": "A comprehensive TypeScript library for Solana Multi-Party Computation (MPC) and Threshold Signature Schemes (TSS) - Compatible with ZenGo-X/solana-tss",
   "main": "./dist/index.cjs",
@@ -41,11 +41,11 @@
     "wasm",
     "typescript"
   ],
-  "author": "kiralightyagami",
+  "author": "asvinshrivas",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kiralightyagami/solana-mpc-tss.git"
+    "url": "git+https://github.com/kiralightyagami/solana-mpc-tss.git"
   },
   "bugs": {
     "url": "https://github.com/kiralightyagami/solana-mpc-tss/issues"
