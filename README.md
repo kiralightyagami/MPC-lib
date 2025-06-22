@@ -87,17 +87,62 @@ const aggregated = cli.aggregateKeys([
   participant3.publicKey
 ], 2);
 
-// Initiate multi-party signing
+// Initiate multi-party signing (Step 1 for each participant)
 const recentBlockhash = await cli.recentBlockHash();
 const step1P1 = await cli.aggregateSignStepOne(
   participant1.secretKey,
+  'destination-address',
+  1000000,
+  'Multi-sig payment', // Optional memo
+  recentBlockhash
+);
+
+const step1P2 = await cli.aggregateSignStepOne(
+  participant2.secretKey,
   'destination-address',
   1000000,
   'Multi-sig payment',
   recentBlockhash
 );
 
-// Continue with remaining participants and steps...
+// Step 2: Create partial signatures
+const allPublicNonces = [step1P1.publicNonce, step1P2.publicNonce];
+const step2P1 = await cli.aggregateSignStepTwo(
+  JSON.stringify(step1P1),
+  participant1.secretKey,
+  'destination-address',
+  1000000,
+  allPublicNonces,
+  'Multi-sig payment',
+  recentBlockhash
+);
+
+const step2P2 = await cli.aggregateSignStepTwo(
+  JSON.stringify(step1P2),
+  participant2.secretKey,
+  'destination-address',
+  1000000,
+  allPublicNonces,
+  'Multi-sig payment',
+  recentBlockhash
+);
+
+// Step 3: Aggregate signatures and broadcast
+const partialSignatures = [step2P1, step2P2];
+const transactionDetails = {
+  amount: 1000000,
+  to: 'destination-address',
+  from: aggregated.aggregatedPublicKey, // Use the aggregated public key
+  network: 'devnet',
+  memo: 'Multi-sig payment',
+  recentBlockhash
+};
+
+const signature = await cli.aggregateSignaturesAndBroadcast(
+  JSON.stringify(partialSignatures),
+  JSON.stringify(transactionDetails),
+  JSON.stringify(aggregated) // Pass the aggregated wallet info here
+);
 ```
 
 ## 📖 API Reference
